@@ -119,7 +119,7 @@ client.on('message', async (msg) => {
 				if(url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)){
 
 					const playlist = await youtube.getPlaylist(url);
-					const videos = await playlist.getVideos.getVideos();
+                    const videos = await playlist.getVideos();
 					console.log(videos);
 
 				}
