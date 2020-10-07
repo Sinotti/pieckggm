@@ -106,43 +106,16 @@ client.on('message', async (msg) => {
 		}
 		if (estouPronto) {
 
-            const oQueTocar = args.join(' ');
-            
-            
+			const oQueTocar = args.join(' ');
 
 			// tenta encontrar música por link
 			try {
-                
-                if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
-                    const playlist = await youtube.getPlaylist(url);
-                    const videos = await playlist.getVideos();
-                   
-                    for (const video of Object.values(videos)) {
-                      const video2 = await youtube.getVideoByID(video.id);
-                      await handleVideo(video2, msg, voiceChannel, true);
-                    }
-                    const mesg = await msg.channel.send({
-                      embed: {
-                        description: `A playlist: **${playlist.title}** foi adicionada a fila`,
-                        color: 3447003
-                      }
-                    });
-                    setTimeout(function() {
-                      mesg.delete();
-                    }, 10000);
-                    return;
-                  }
-                  
 				const video = await youtube.getVideo(oQueTocar);
 				msg.channel.send(`Encontrei o que você pediu, vou começar a tocar: ${video.title}`);
 				filaDeMusicas.push(oQueTocar);
 				if (filaDeMusicas.length === 1) {
-                    tocarMusica(msg);
-                    
-                }
-                
-                
-				
+					tocarMusica(msg);
+				}
 			}
 			catch (error) {
 				try {
