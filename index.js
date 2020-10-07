@@ -116,6 +116,13 @@ client.on('message', async (msg) => {
 				if (filaDeMusicas.length === 1) {
 					tocarMusica(msg);
 				}
+				if(url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)){
+
+					const playlist = await youtube.getPlaylist(url);
+					const videos = await playlist.getVideos.getVideos();
+					console.log(videos);
+
+				}
 			}
 			catch (error) {
 				try {
