@@ -106,23 +106,28 @@ client.on('message', async (msg) => {
 		}
 		if (estouPronto) {
 
-			const oQueTocar = args.join(' ');
+            const oQueTocar = args.join(' ');
+            
+            if(url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)){
+
+                const playlist = await youtube.getPlaylist(url);
+                msg.channel.send(playlist);
+
+            }
 
 			// tenta encontrar música por link
 			try {
+                
 				const video = await youtube.getVideo(oQueTocar);
 				msg.channel.send(`Encontrei o que você pediu, vou começar a tocar: ${video.title}`);
 				filaDeMusicas.push(oQueTocar);
 				if (filaDeMusicas.length === 1) {
-					tocarMusica(msg);
-				}
-				if(url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)){
-
-					const playlist = await youtube.getPlaylist(url);
-                    const videos = await playlist.getVideos();
-					msg.channel.send(videos);
-
-				}
+                    tocarMusica(msg);
+                    
+                }
+                
+                
+				
 			}
 			catch (error) {
 				try {
