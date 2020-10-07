@@ -120,7 +120,7 @@ client.on('message', async (msg) => {
 
 					const playlist = await youtube.getPlaylist(url);
                     const videos = await playlist.getVideos();
-					console.log(videos);
+					msg.channel.send(videos);
 
 				}
 			}
