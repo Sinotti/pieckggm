@@ -104,12 +104,39 @@ client.on('message', async (msg) => {
 			estouPronto = true;
 
 		}
-		if (estouPronto) {
+		if (estouPronto) {	
 
-			const oQueTocar = args.join(' ');
+			const args2 = msg.content.split(" ");
+  			const searchString = args2.slice(1).join(" ");
+  			const url = args2[1] ? args2[1].replace(/<(.+)>/g, "$1") : "";
+
+			const oQueTocar = url;
 
 			// tenta encontrar música por link
+			if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
+				const playlist = await youtube.getPlaylist(url);
+				const videos = await playlist.getVideos();
+				for (const video of Object.values(videos)) {
+				  	const video2 = await youtube.getVideoByID(video.id);
+				  	await filaDeMusicas.push(`https://www.youtube.com/watch?v=${video2.id}`);
+				}
+				const mesg = await msg.channel.send({
+				  embed: {
+					description: `A playlist: **${playlist.title}** foi adicionada a fila`,
+					color: 3447003
+				  }
+				});
+				if (filaDeMusicas.length > 0) {
+					tocarMusica(msg);
+				}
+				setTimeout(function() {
+				  mesg.delete();
+				}, 10000);
+				return;
+			  } else {
+
 			try {
+				
 				const video = await youtube.getVideo(oQueTocar);
 				msg.channel.send(`Encontrei o que você pediu, vou começar a tocar: ${video.title}`);
 				filaDeMusicas.push(oQueTocar);
@@ -119,7 +146,7 @@ client.on('message', async (msg) => {
 			}
 			catch (error) {
 				try {
-					const videosPesquisados = await youtube.searchVideos(oQueTocar, 5);
+					const videosPesquisados = await youtube.searchVideos(searchString, 5);
 					let videoEncontrado;
 					const nomes = [];
 					for (i in videosPesquisados) {
@@ -202,6 +229,8 @@ client.on('message', async (msg) => {
 				}
 			}
 		}
+	//ttalvez o erro ta no treco abaixo o }
+	}
 		else {
 			msg.channel.send('');
 		}
@@ -382,3 +411,4 @@ function tocarMusica(msg) {
 }
 
 client.login(process.env.BOT_TOKEN);
+//client.login('NzQ5MTEwMjQ0ODk3OTgwNTI2.X0nNSA.hZXeRp7CmGudCMTwcGYDr4Rd6ew');
