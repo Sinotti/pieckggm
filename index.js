@@ -111,6 +111,10 @@ client.on('message', async (msg) => {
   			const url = args2[1] ? args2[1].replace(/<(.+)>/g, "$1") : "";
 
 			const oQueTocar = url;
+			let temMusica = 0
+			if(filaDeMusicas.length > 0){
+				temMusica= 1;
+			}
 
 			// tenta encontrar música por link
 			if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
@@ -126,7 +130,7 @@ client.on('message', async (msg) => {
 					color: 3447003
 				  }
 				});
-				if (filaDeMusicas.length > 0) {
+				if (temMusica == 0) {
 					tocarMusica(msg);
 				}
 				setTimeout(function() {
@@ -287,6 +291,18 @@ client.on('message', async (msg) => {
 			}
 		}
 	}
+	//tocando agora
+	if (commandName == 'now' || commandName == 'tocando') {
+		if (filaDeMusicas.length >= 1 || commandName == 'queue' && filaDeMusicas.length >= 1) {
+			
+			msg.channel.send(`no momento estou tocando: ${filaDeMusicas[0]}`);
+	
+		}
+		if (filaDeMusicas.length === 0 || commandName == 'queue' && filaDeMusicas.length === 0) {
+			msg.channel.send('Acabei de verificar e não há nenhuma música na fila ou não estou tocando nada no momento');
+	
+		}
+	}
 	// resume
 	if (commandName == 'continuar' || commandName == 'continue' || commandName == 'start') {
 		if (msg.member.voice.channel) {
@@ -409,6 +425,5 @@ function tocarMusica(msg) {
 		}
 	});
 }
-
 client.login(process.env.BOT_TOKEN);
 //client.login('NzQ5MTEwMjQ0ODk3OTgwNTI2.X0nNSA.hZXeRp7CmGudCMTwcGYDr4Rd6ew');
