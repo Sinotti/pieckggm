@@ -426,4 +426,3 @@ function tocarMusica(msg) {
 	});
 }
 client.login(process.env.BOT_TOKEN);
-//client.login('NzQ5MTEwMjQ0ODk3OTgwNTI2.X0nNSA.hZXeRp7CmGudCMTwcGYDr4Rd6ew');
